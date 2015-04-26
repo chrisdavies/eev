@@ -1,0 +1,28 @@
+{
+  "name": "eev",
+  "main": "eev.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/chrisdavies/eev",
+  "authors": [
+    "Chris Davies <ferociousturtle@gmail.com>"
+  ],
+  "description": "A tiny, fast, zero-dependency event emitter",
+  "keywords": [
+    "emitter"
+    "events",
+    "event",
+    "listener",
+    "pubsub",
+    "trigger",
+    "observe"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".gitignore",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "readme.md"
+  ]
+}

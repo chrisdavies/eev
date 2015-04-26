@@ -1,10 +1,3 @@
-// Eev
-// test
-// document
-// document how to do a "once"
-// build
-// npm / browserify
-
 var Eev = (function () {
   function Eev () {
     this.events = {};

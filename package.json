@@ -1,0 +1,27 @@
+{
+  "name": "eev",
+  "version": "0.0.1",
+  "description": "A tiny, fast, zero-dependency event emitter",
+  "main": "eev.js",
+  "directories": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrisdavies/eev"
+  },
+  "keywords": [
+    "emitter"
+    "events",
+    "event",
+    "listener",
+    "pubsub",
+    "trigger",
+    "observe"
+  ],
+  "author": "Chris Davies <ferociousturtle@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrisdavies/eev/issues"
+  },
+  "homepage": "https://github.com/chrisdavies/eev"
+}
