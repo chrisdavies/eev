@@ -8,7 +8,7 @@
   ],
   "description": "A tiny, fast, zero-dependency event emitter",
   "keywords": [
-    "emitter"
+    "emitter",
     "events",
     "event",
     "listener",
