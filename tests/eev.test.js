@@ -44,6 +44,36 @@ describe('Eev', function () {
 
   });
 
+  it('Disallows duplicated registrations', function () {
+    var e = new Eev();
+    var c = 0;
+
+    function nope () {
+      ++c;
+    }
+
+    e.on('go', nope);
+    e.emit('go', 'hi');
+
+    expect(c).toEqual(1);
+  });
+
+  it('Off works even if called multiple times', function () {
+    var e = new Eev();
+    var c = 0;
+
+    function nope () {
+      ++c;
+    }
+
+    e.on('go', nope);
+    e.off('go', nope);
+    e.off('go', nope);
+    e.emit('go', 'hi');
+
+    expect(c).toEqual(0);
+  });
+
   it('Allows a one-time registration', function () {
     var e = new Eev();
     var c = 0;
@@ -63,7 +93,7 @@ describe('Eev', function () {
 
     e.emit('go', 'hi');
     e.emit('go', 'again');
-    
+
     expect(c).toEqual(5);
 
   });
