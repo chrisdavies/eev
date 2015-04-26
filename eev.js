@@ -1,12 +1,62 @@
 // Eev
-// improve perf
-// improve minification
 // test
+// document
 // document how to do a "once"
-//
+// build
+// npm / browserify
 
 var Eev = (function () {
+  function Eev () {
+    this.events = {};
+  };
+
+  Eev.prototype = {
+    on: function (name, handler) {
+      var prop = evtProp(name);
+
+      if (handler[prop]) return;
+
+      var evt = this.evt(name),
+          link = (handler[prop] = new Link(handler)),
+          tail = evt.tail;
+
+      link.next = tail;
+      link.prev = tail.prev;
+      link.prev.next = link.next.prev = link;
+    },
+
+    off: function (name, handler) {
+      var prop = evtProp(name),
+          link = handler[prop];
+
+      if (link) {
+        link.next.prev = link.prev;
+        link.prev.next = link.next;
+        handler[prop] = undefined;
+      }
+    },
+
+    evt: function (name) {
+      return this.events[name] || (this.events[name] = new LinkedList());
+    },
+
+    emit: function (name, data) {
+      this.evt(name).head.run(data);
+    }
+  };
+
   function noop() {}
+
+  function LinkedList() {
+    var head = new Link(noop),
+        tail = (head.next = new Link());
+
+    tail.prev = head;
+    tail.run = noop;
+
+    this.head = head;
+    this.tail = tail;
+  }
 
   function Link(cb) {
     this.cb = cb;
@@ -21,48 +71,9 @@ var Eev = (function () {
     }
   };
 
-  function Evt() {
-    var head = new Link(noop),
-        tail = (head.next = new Link());
-
-    tail.prev = head;
-    tail.run = noop;
-
-    this.head = head;
-    this.tail = tail;
+  function evtProp(name) {
+    return '_evt' + name;
   }
-
-  function Eev () {
-    this.events = {};
-  };
-
-  Eev.prototype = {
-    on: function (name, handler) {
-      var evt = this.evt(name);
-
-      var link = (handler['_evt' + name] = new Link(handler)),
-          tail = evt.tail;
-      link.next = tail;
-      link.prev = tail.prev;
-      link.prev.next = link;
-      link.next.prev = link;
-      return link;
-    },
-
-    off: function (name, handler) {
-      var link = handler['_evt' + name];
-      link.next.prev = link.prev;
-      link.prev.next = link.next;
-    },
-
-    evt: function (name) {
-      return this.events[name] || (this.events[name] = new Evt());
-    },
-
-    emit: function (name, data) {
-      this.evt(name).head.run(data);
-    }
-  };
 
   return Eev;
 })();
