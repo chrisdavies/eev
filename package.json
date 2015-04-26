@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/chrisdavies/eev/issues"
   },
-  "homepage": "https://github.com/chrisdavies/eev"
+  "homepage": "https://github.com/chrisdavies/eev",
+  "scripts": {
+    "make": "uglifyjs eev.js --source-map eev.min.js.map -m -c -o eev.min.js"
+  }
 }
