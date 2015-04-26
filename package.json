@@ -10,7 +10,7 @@
     "url": "https://github.com/chrisdavies/eev"
   },
   "keywords": [
-    "emitter"
+    "emitter",
     "events",
     "event",
     "listener",
