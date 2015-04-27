@@ -49,6 +49,12 @@ Or use npm: https://www.npmjs.com/package/eev
 
     npm install --save eev
 
+## Performance
+
+It performs well (compared to jQuery in this case):
+
+http://jsperf.com/jsevents/3
+
 ## License MIT
 
 Copyright (c) 2015 Chris Davies
