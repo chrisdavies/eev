@@ -1,89 +1,112 @@
 var Eev = (function () {
-  function Eev () {
+
+  // The Eev constructor
+  function PubSub () {
     this.events = {};
-  };
+  }
 
-  Eev.prototype = {
-    on: function (name, handler) {
-      var prop = evtProp(name);
-
-      if (handler[prop]) return;
-
-      var evt = this.evt(name),
-          link = (handler[prop] = new Link(handler)),
-          tail = evt.tail;
-
-      link.next = tail;
-      link.prev = tail.prev;
-      link.prev.next = link.next.prev = link;
+  PubSub.prototype = {
+    on: function (name, fn) {
+      this.isRegistered(name, fn) || this.register(name, fn);
     },
 
-    off: function (name, handler) {
-      var prop = evtProp(name),
-          link = handler[prop];
-
-      if (link) {
-        link.next.prev = link.prev;
-        link.prev.next = link.next;
-        handler[prop] = undefined;
-      }
-    },
-
-    evt: function (name) {
-      return this.events[name] || (this.events[name] = new LinkedList());
+    off: function (name, fn) {
+      this.isRegistered(name, fn) && this.unregister(name, fn);
     },
 
     emit: function (name, data) {
-      this.evt(name).head.run(data);
+      var evt = this.events[name];
+      evt && evt.head.run(data);
+    },
+
+    isRegistered: function (name, fn) {
+      return fn._eev && fn._eev[name];
+    },
+
+    register: function (name, fn) {
+      var link = this.insertLinkInList(name, fn);
+
+      this.insertLinkInFn(name, link, fn);
+    },
+
+    insertLinkInList: function (name, fn) {
+      var list = this.events[name] || (this.events[name] = new LinkedList());
+
+      return list.insert(fn);
+    },
+
+    insertLinkInFn: function (name, link, fn) {
+      var eev = fn._eev || (fn._eev = {});
+      eev[name] = link;
+    },
+
+    unregister: function (name, fn) {
+      var link = this.removeLinkFromFn(name, fn);
+
+      this.removeLinkFromList(name, link);
+    },
+
+    removeLinkFromFn: function (name, fn) {
+      var link = fn._eev[name];
+
+      fn._eev[name] = undefined;
+      return link;
+    },
+
+    removeLinkFromList: function (name, link) {
+      var list = this.events[name];
+
+      list && list.remove(link);
     }
   };
 
-  function noop() {}
-
-  function LinkedList() {
-    var head = new Link(noop),
-        tail = (head.next = new Link());
-
-    tail.prev = head;
-    tail.run = noop;
-
-    this.head = head;
-    this.tail = tail;
+  // A relatively generic LinkedList impl
+  function LinkedList(linkConstructor) {
+    this.head = new RunnableLink();
+    this.tail = new RunnableLink(this.head);
+    this.head.next = this.tail;
+    this.linkConstructor = linkConstructor;
   }
 
-  function Link(cb) {
-    this.cb = cb;
-    this.prev = undefined;
-    this.next = undefined;
-  }
+  LinkedList.prototype = {
+    insert: function (data) {
+      var link = new RunnableLink(this.tail.prev, this.tail, data);
+      link.next.prev = link.prev.next = link;
+      return link;
+    },
 
-  Link.prototype = {
-    run: function (data) {
-      this.cb(data);
-      this.next.run(data);
+    remove: function (link) {
+      link.prev.next = link.next;
+      link.next.prev = link.prev;
     }
   };
 
-  function evtProp(name) {
-    return '_evt' + name;
+  // A link in the linked list which allows
+  // for efficient execution of the callbacks
+  function RunnableLink(prev, next, fn) {
+    this.prev = prev;
+    this.next = next;
+    this.fn = fn || noop;
   }
 
-  return Eev;
-})();
+  RunnableLink.prototype.run = function (data) {
+    this.fn(data);
+    this.next && this.next.run(data);
+  };
 
+  function noop () { }
+
+  return PubSub;
+}());
+
+// AMD/CommonJS support
 (function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
+  var define = root.define,
+      module = root.module;
+
+  if (define && define.amd) {
     define([], factory);
-  } else if (typeof exports === 'object') {
-    // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like environments that support module.exports,
-    // like Node.
+  } else if (module && module.exports) {
     module.exports = factory();
-  } else {
-    // Browser globals (root is window)
-    root.Eev = factory();
   }
-}(this, function () {
-  return Eev;
-}));
+}(this, function () { return Eev; }));
