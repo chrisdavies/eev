@@ -101,12 +101,11 @@ var Eev = (function () {
 
 // AMD/CommonJS support
 (function (root, factory) {
-  var define = root.define,
-      module = root.module;
+  var define = root.define;
 
   if (define && define.amd) {
     define([], factory);
-  } else if (module && module.exports) {
+  } else if (typeof module !== 'undefined' && module.exports) {
     module.exports = factory();
   }
 }(this, function () { return Eev; }));
