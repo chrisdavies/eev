@@ -1,6 +1,12 @@
 # Eev
 
-A tiny, fast, zero-dependency event emitter for JavaScript.
+A tiny, [fast](http://jsperf.com/jsevents/3), zero-dependency event emitter for JavaScript.
+
+- Roughly 600 bytes minified + zipped
+- Fast see [jsperf](http://jsperf.com/jsevents/3)
+- Simple
+
+[![Build Status](https://travis-ci.org/chrisdavies/eev.svg?branch=master)](https://travis-ci.org/chrisdavies/eev)
 
 ## Usage
 
@@ -48,12 +54,6 @@ Just download eev.min.js, or use bower:
 Or use npm: https://www.npmjs.com/package/eev
 
     npm install --save eev
-
-## Performance
-
-It performs well (compared to jQuery in this case):
-
-http://jsperf.com/jsevents/3
 
 ## License MIT
 
