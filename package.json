@@ -25,6 +25,10 @@
   },
   "homepage": "https://github.com/chrisdavies/eev",
   "scripts": {
-    "make": "uglifyjs eev.js --source-map eev.min.js.map -m -c -o eev.min.js"
+    "test": "jasmine-node test/*.spec.js",
+    "min": "uglifyjs eev.js --source-map eev.min.js.map -m -c -o eev.min.js && echo 'Minified size' && uglifyjs eev.js | gzip -9f | wc -c"
+  },
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
   }
 }
