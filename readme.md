@@ -4,6 +4,7 @@ A tiny, [fast](http://jsperf.com/jsevents/3), zero-dependency event emitter for 
 
 - Roughly 600 bytes minified + zipped
 - Fast... see [jsperf](http://jsperf.com/jsevents/3)
+- Zero dependencies
 - Simple
 
 [![Build Status](https://travis-ci.org/chrisdavies/eev.svg?branch=master)](https://travis-ci.org/chrisdavies/eev)
