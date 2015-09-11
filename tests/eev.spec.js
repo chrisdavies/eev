@@ -38,11 +38,24 @@
         throw new Error('Should not have run');
       }
 
-      e.on('go', nope);
-      e.off('go', nope);
+      e.on('go there', nope);
+      e.off('go there', nope);
 
       e.emit('go', 'hi');
 
+    });
+
+    it('Allows multiple registrations in one statement', function () {
+      var e = new Eev();
+      var c = 0;
+      e.on('one two', function () {
+        ++c;
+      });
+
+      e.emit('one');
+      expect(c).toEqual(1);
+      e.emit('two');
+      expect(c).toEqual(2);
     });
 
     it('Disallows duplicated registrations', function () {
@@ -53,6 +66,7 @@
         ++c;
       }
 
+      e.on('go', nope);
       e.on('go', nope);
       e.emit('go', 'hi');
 

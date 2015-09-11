@@ -6,12 +6,25 @@ var Eev = (function () {
   }
 
   PubSub.prototype = {
-    on: function (name, fn) {
-      this.isRegistered(name, fn) || this.register(name, fn);
+    on: function (names, fn) {
+      var self = this;
+      this.eachName(names, function (name) {
+        self.isRegistered(name, fn) || self.register(name, fn);
+      });
     },
 
-    off: function (name, fn) {
-      this.isRegistered(name, fn) && this.unregister(name, fn);
+    off: function (names, fn) {
+      var self = this;
+      this.eachName(names, function (name) {
+        self.isRegistered(name, fn) && self.unregister(name, fn);
+      });
+    },
+
+    eachName: function (name, fn) {
+      var names = name.split(/\W+/g);
+      for (var i = 0; i < names.length; ++i) {
+        fn(names[i]);
+      }
     },
 
     emit: function (name, data) {
