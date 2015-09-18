@@ -154,4 +154,4 @@
 
     });
   });
-})(this.tem || require('../eev'));
+})(this.Eev || require('../eev'));

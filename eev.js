@@ -1,84 +1,6 @@
+
 var Eev = (function () {
   var id = 0;
-
-  // The Eev constructor
-  function PubSub () {
-    this.id = (++id);
-    this.events = {};
-  }
-
-  PubSub.prototype = {
-    on: function (names, fn) {
-      var self = this;
-      this.eachName(names, function (name) {
-        self.isRegistered(name, fn) || self.register(name, fn);
-      });
-    },
-
-    off: function (names, fn) {
-      var self = this;
-      this.eachName(names, function (name) {
-        self.isRegistered(name, fn) && self.unregister(name, fn);
-      });
-    },
-
-    eachName: function (name, fn) {
-      var names = name.split(/\W+/g);
-      for (var i = 0; i < names.length; ++i) {
-        fn(names[i]);
-      }
-    },
-
-    emit: function (name, data) {
-      var evt = this.events[name];
-      evt && evt.head.run(data);
-    },
-
-    scoped: function (name) {
-      return this.id + '_' + name;
-    },
-
-    isRegistered: function (name, fn) {
-      return fn._eev && fn._eev[this.scoped(name)];
-    },
-
-    register: function (name, fn) {
-      var link = this.insertLinkInList(name, fn);
-
-      this.insertLinkInFn(name, link, fn);
-    },
-
-    insertLinkInList: function (name, fn) {
-      var list = this.events[name] || (this.events[name] = new LinkedList());
-
-      return list.insert(fn);
-    },
-
-    insertLinkInFn: function (name, link, fn) {
-      var eev = fn._eev || (fn._eev = {});
-      eev[this.scoped(name)] = link;
-    },
-
-    unregister: function (name, fn) {
-      var link = this.removeLinkFromFn(name, fn);
-
-      this.removeLinkFromList(name, link);
-    },
-
-    removeLinkFromFn: function (name, fn) {
-      name = this.scoped(name);
-      var link = fn._eev[name];
-
-      fn._eev[name] = undefined;
-      return link;
-    },
-
-    removeLinkFromList: function (name, link) {
-      var list = this.events[name];
-
-      list && list.remove(link);
-    }
-  };
 
   // A relatively generic LinkedList impl
   function LinkedList(linkConstructor) {
@@ -86,6 +8,7 @@ var Eev = (function () {
     this.tail = new RunnableLink(this.head);
     this.head.next = this.tail;
     this.linkConstructor = linkConstructor;
+    this.reg = {};
   }
 
   LinkedList.prototype = {
@@ -116,7 +39,40 @@ var Eev = (function () {
 
   function noop () { }
 
-  return PubSub;
+  function Eev () {
+    this.events = {};
+  }
+
+  Eev.prototype = {
+    on: function (names, fn) {
+      var me = this;
+      names.split(/\W+/g).forEach(function (name) {
+        var list = me.events[name] || (me.events[name] = new LinkedList());
+        var eev = fn._eev || (fn._eev = (++id));
+
+        list.reg[eev] || (list.reg[eev] = list.insert(fn));
+      });
+    },
+
+    off: function (names, fn) {
+      var me = this;
+      names.split(/\W+/g).forEach(function (name) {
+        var list = me.events[name];
+        var link = list.reg[fn._eev];
+
+        list.reg[fn._eev] = undefined;
+
+        list && link && list.remove(link);
+      });
+    },
+
+    emit: function (name, data) {
+      var evt = this.events[name];
+      evt && evt.head.run(data);
+    }
+  };
+
+  return Eev;
 }());
 
 // AMD/CommonJS support

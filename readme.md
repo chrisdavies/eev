@@ -1,9 +1,9 @@
 # Eev
 
-A tiny, [fast](http://jsperf.com/jsevents/3), zero-dependency event emitter for JavaScript.
+A tiny, [fast](http://jsperf.com/jsevents/28), zero-dependency event emitter for JavaScript.
 
-- Roughly 600 bytes minified + zipped
-- Fast... see [jsperf](http://jsperf.com/jsevents/3)
+- Less than 500 bytes minified + zipped
+- Fast... see [jsperf](http://jsperf.com/jsevents/28)
 - Zero dependencies
 - Simple
 
@@ -13,38 +13,57 @@ A tiny, [fast](http://jsperf.com/jsevents/3), zero-dependency event emitter for 
 
 Create an Eev instance.
 
-    var e = new Eev();
+```javascript
+  var e = new Eev();
+```
 
 Then, add handlers as you see fit.
 
-    e.on('some-event', function (data) {
-      alert('got ' + data);
-    });
+```javascript
+  e.on('some-event', function (data) {
+    alert('got ' + data);
+  });
 
-    e.on('some-event', function (data) {
-      console.log('got ' + data);
-    });
+  e.on('some-event', function (data) {
+    console.log('got ' + data);
+  });
+```
 
 Remove handlers using `off`.
 
-    function myHandler (data) { console.log(data); }
+```javascript
+  function myHandler (data) { console.log(data); }
 
-    e.on('some-event', myHandler);
-    e.off('some-event', myHandler);
+  e.on('some-event', myHandler);
+  e.off('some-event', myHandler);
+```
 
 Trigger events using `emit`.
 
-    // The second parameter here is the data you wish to
-    // pass to the event handlers
-    e.emit('some-event', { foo: 'Bar' });
+```javascript
+  // The second parameter here is the data you wish to
+  // pass to the event handlers
+  e.emit('some-event', { foo: 'Bar' });
+```
 
 If you want a handler to only run once, you can do this:
 
-    e.on('some-event', function foo () {
-      e.off('some-event', foo);
+```javascript
+  e.on('some-event', function foo () {
+    e.off('some-event', foo);
 
-      // Do stuff
-    });
+    // Do stuff
+  });
+```
+
+You can register for multiple events at once like this:
+
+```javascript
+  function myHandler (data) { console.log(data); }
+
+  e.on('event1 event2 etc', myHandler);
+  e.off('event1 event2 etc', myHandler);
+```
 
 ## Installation
 
