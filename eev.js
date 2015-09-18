@@ -1,7 +1,9 @@
 var Eev = (function () {
+  var id = 0;
 
   // The Eev constructor
   function PubSub () {
+    this.id = (++id);
     this.events = {};
   }
 
@@ -32,8 +34,12 @@ var Eev = (function () {
       evt && evt.head.run(data);
     },
 
+    scoped: function (name) {
+      return this.id + '_' + name;
+    },
+
     isRegistered: function (name, fn) {
-      return fn._eev && fn._eev[name];
+      return fn._eev && fn._eev[this.scoped(name)];
     },
 
     register: function (name, fn) {
@@ -50,7 +56,7 @@ var Eev = (function () {
 
     insertLinkInFn: function (name, link, fn) {
       var eev = fn._eev || (fn._eev = {});
-      eev[name] = link;
+      eev[this.scoped(name)] = link;
     },
 
     unregister: function (name, fn) {
@@ -60,6 +66,7 @@ var Eev = (function () {
     },
 
     removeLinkFromFn: function (name, fn) {
+      name = this.scoped(name);
       var link = fn._eev[name];
 
       fn._eev[name] = undefined;

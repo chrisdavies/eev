@@ -89,6 +89,47 @@
       expect(c).toEqual(0);
     });
 
+    it('Allows the same fn to handle more than one event', function () {
+      var e1 = new Eev();
+      var e2 = new Eev();
+      var c = 0;
+      var handler = function () { c++ };
+
+      e1.on('foo', handler);
+      e2.on('foo', handler);
+
+      e1.emit('foo');
+      e2.emit('foo');
+
+      expect(c).toEqual(2);
+
+      e1.off('foo', handler);
+      e2.emit('foo', handler);
+
+      expect(c).toEqual(3);
+
+    });
+
+    it('Is isolated to instances', function () {
+      var e1 = new Eev();
+      var e2 = new Eev();
+      var c1 = 0;
+      var c2 = 0;
+
+      e1.on('foo', function () { ++c1; });
+      e2.on('foo', function () { ++c2; });
+
+      e1.emit('foo');
+
+      expect(c1).toEqual(1);
+      expect(c2).toEqual(0);
+
+      e2.emit('foo');
+
+      expect(c1).toEqual(1);
+      expect(c2).toEqual(1);
+    });
+
     it('Allows a one-time registration', function () {
       var e = new Eev();
       var c = 0;
