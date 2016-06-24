@@ -65,6 +65,35 @@ You can register for multiple events at once like this:
   e.off('event1 event2 etc', myHandler);
 ```
 
+Stopping propagation isn't build into Eev. If enough people ask for it, I'll bake it in. Meanwile, you can work around this limitation by doing something like this:
+
+```js
+
+  ;(function () {
+    var superOn = Eev.prototype.on;
+
+    Eev.prototype.on = function (names, fn) {
+      superOn.call(this, names, function (data) {
+        if (!data.isCanceled) {
+          return fn(data);
+        }
+      });
+    };
+
+  }());
+
+```
+
+With the above patch in place, you can do something like this in your event handlers:
+
+```js
+e.on('some-event', function foo (data) {
+  data.isCanceled = true; // Now, no downstream handlers should be invoked
+})
+```
+
+
+
 ## Installation
 
 Just download eev.min.js, or use bower:
