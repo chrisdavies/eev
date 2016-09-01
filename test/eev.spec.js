@@ -130,6 +130,18 @@
       expect(c2).toEqual(1);
     });
 
+    it('Works with dash-ed names', function (done) {
+      var e = new Eev()
+      function myHandler (data) {
+        console.log(data);
+        expect(data.foo).toEqual('Bar');
+        done();
+      }
+
+      e.on('some-event', myHandler);
+      e.emit('some-event', { foo: 'Bar' });
+    })
+
     it('Allows a one-time registration', function () {
       var e = new Eev();
       var c = 0;

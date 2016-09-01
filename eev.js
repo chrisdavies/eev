@@ -1,6 +1,7 @@
 
 var Eev = (function () {
   var id = 0;
+  var splitter = /[^\w\-]+/g;
 
   // A relatively generic LinkedList impl
   function LinkedList(linkConstructor) {
@@ -46,7 +47,8 @@ var Eev = (function () {
   Eev.prototype = {
     on: function (names, fn) {
       var me = this;
-      names.split(/\W+/g).forEach(function (name) {
+
+      names.split(splitter).forEach(function (name) {
         var list = me.events[name] || (me.events[name] = new LinkedList());
         var eev = fn._eev || (fn._eev = (++id));
 
@@ -56,7 +58,7 @@ var Eev = (function () {
 
     off: function (names, fn) {
       var me = this;
-      names.split(/\W+/g).forEach(function (name) {
+      names.split(splitter).forEach(function (name) {
         var list = me.events[name];
         var link = list.reg[fn._eev];
 
