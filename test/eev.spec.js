@@ -133,7 +133,6 @@
     it('Works with dash-ed names', function (done) {
       var e = new Eev()
       function myHandler (data) {
-        console.log(data);
         expect(data.foo).toEqual('Bar');
         done();
       }
