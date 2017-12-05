@@ -3,8 +3,8 @@ declare module 'eev' {
 
     export class Eev {
         constructor();
-        on(names: string[], fn: CallbackFunction): void;
-        off(names: string[], fn: CallbackFunction): void;
+        on(names: string, fn: CallbackFunction): void;
+        off(names: string, fn: CallbackFunction): void;
         emit(name: string, data?: any): void;
     }
 
