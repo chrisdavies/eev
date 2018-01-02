@@ -58,8 +58,13 @@ var Eev = (function () {
 
     off: function (names, fn) {
       var me = this;
-      names.split(splitter).forEach(function (name) {
+      fn && names.split(splitter).forEach(function (name) {
         var list = me.events[name];
+
+        if (!list) {
+          return;
+        }
+
         var link = list.reg[fn._eev];
 
         list.reg[fn._eev] = undefined;

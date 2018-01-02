@@ -45,6 +45,29 @@
 
     });
 
+    it('Allows removal of invalid handlers', function () {
+      var e = new Eev();
+
+      e.on('go', function (data) {
+        expect(data).toEqual('hi');
+      });
+
+      function nope () {
+        throw new Error('Should not have run');
+      }
+
+      e.off('go there', nope);
+
+      e.on('go there', nope);
+
+      e.off('go there', nope);
+      e.off('go there', nope);
+      e.off('go there');
+
+      e.emit('go', 'hi');
+
+    });
+
     it('Allows multiple registrations in one statement', function () {
       var e = new Eev();
       var c = 0;

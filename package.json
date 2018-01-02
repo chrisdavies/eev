@@ -1,10 +1,13 @@
 {
   "name": "eev",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A tiny, fast, zero-dependency event emitter",
   "main": "eev.js",
   "directories": {},
-  "scripts": {},
+  "scripts": {
+    "test": "jasmine-node test/*.spec.js",
+    "min": "uglifyjs eev.js --source-map \"filename=eev.min.js.map\" -m -c -o eev.min.js && echo 'Minified size' && cat eev.min.js | gzip -9f | wc -c"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/chrisdavies/eev"
@@ -24,11 +27,8 @@
     "url": "https://github.com/chrisdavies/eev/issues"
   },
   "homepage": "https://github.com/chrisdavies/eev",
-  "scripts": {
-    "test": "jasmine-node test/*.spec.js",
-    "min": "uglifyjs eev.js --source-map eev.min.js.map -m -c -o eev.min.js && echo 'Minified size' && cat eev.min.js | gzip -9f | wc -c"
-  },
   "devDependencies": {
-    "jasmine-node": "^1.14.5"
+    "jasmine-node": "^1.14.5",
+    "uglify-js": "^3.3.4"
   }
 }
