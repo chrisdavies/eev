@@ -59,12 +59,12 @@ var Eev = (function () {
     off: function (names, fn) {
       var me = this;
       names.split(splitter).forEach(function (name) {
-        var list = me.events[name];
-        var link = list.reg[fn._eev];
-
-        list.reg[fn._eev] = undefined;
-
-        list && link && list.remove(link);
+        if (typeof fn === 'function') {
+          var list = me.events[name];
+          var link = list.reg[fn._eev];
+          list.reg[fn._eev] = undefined;
+          list && link && list.remove(link);
+        }
       });
     },
 
