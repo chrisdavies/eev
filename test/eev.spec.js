@@ -45,6 +45,17 @@
 
     });
 
+    it('Allows removal of handlers even if `off` has no callback', function () {
+      var e = new Eev();
+
+      e.on('go', function (data) {
+        expect(data).toEqual('hi');
+      });
+
+      e.emit('go', 'hi');
+      e.off('go');
+    });
+
     it('Allows multiple registrations in one statement', function () {
       var e = new Eev();
       var c = 0;
