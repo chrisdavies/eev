@@ -45,6 +45,8 @@ var Eev = (function () {
   }
 
   Eev.prototype = {
+    constructor: Eev,
+
     on: function (names, fn) {
       var me = this;
 
