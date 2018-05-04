@@ -1,7 +1,7 @@
 
 var Eev = (function () {
   var id = 0;
-  var splitter = /[^\w\-]+/g;
+  var splitter = /[\s,]+/g;
 
   // A relatively generic LinkedList impl
   function LinkedList(linkConstructor) {
