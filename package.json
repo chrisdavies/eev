@@ -1,8 +1,9 @@
 {
   "name": "eev",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A tiny, fast, zero-dependency event emitter",
   "main": "eev.js",
+  "types": "eev.d.ts",
   "directories": {},
   "scripts": {
     "test": "jasmine-node test/*.spec.js",
