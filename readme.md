@@ -1,6 +1,6 @@
 # Eev
 
-A tiny, [fast](http://jsperf.com/jsevents/28), zero-dependency event emitter for JavaScript.
+A tiny, [fast](https://jsperf.com/jsevents/31), zero-dependency event emitter for JavaScript.
 
 - Less than 500 bytes minified + zipped
 - Fast... see [jsperf](http://jsperf.com/jsevents/28)
