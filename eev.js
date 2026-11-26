@@ -34,8 +34,11 @@ var Eev = (function () {
   }
 
   RunnableLink.prototype.run = function (data) {
-    this.fn(data);
-    this.next && this.next.run(data);
+    var link = this;
+    while (link) {
+      link.fn(data);
+      link = link.next;
+    }
   };
 
   function noop () { }

@@ -27,6 +27,54 @@
       expect(c).toEqual(3);
     });
 
+    it('Handles large listener lists without overflowing the stack', function () {
+      var e = new Eev();
+      var data = {};
+      var actual = [];
+      var expected = [];
+      var payloadsMatch = true;
+
+      function register(index) {
+        e.on('go', function (received) {
+          payloadsMatch = payloadsMatch && received === data;
+          actual.push(index);
+        });
+      }
+
+      for (var i = 0; i < 20000; ++i) {
+        expected.push(i);
+        register(i);
+      }
+
+      e.emit('go', data);
+
+      expect(actual).toEqual(expected);
+      expect(payloadsMatch).toEqual(true);
+    });
+
+    it('Preserves listener changes made during emit', function () {
+      var e = new Eev();
+      var calls = [];
+
+      function second() { calls.push('second'); }
+      function last() { calls.push('last'); }
+
+      e.on('go', function () {
+        calls.push('first');
+        e.off('go', second);
+        e.on('go', last);
+      });
+      e.on('go', second);
+      e.on('go', function () { calls.push('third'); });
+
+      e.emit('go');
+      expect(calls).toEqual(['first', 'third', 'last']);
+
+      calls = [];
+      e.emit('go');
+      expect(calls).toEqual(['first', 'third', 'last']);
+    });
+
     it('Allows removal of handlers', function () {
       var e = new Eev();
 
